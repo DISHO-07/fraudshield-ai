@@ -3,7 +3,7 @@
 // Run with: node test.js  (make sure server is running)
 // ═══════════════════════════════════════════════════════
 
-const BASE = "http://127.0.0.1:3000";
+const BASE = "http://127.0.0.1:4000";
 
 // Test scenarios covering all risk levels
 const scenarios = [

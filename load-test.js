@@ -4,7 +4,7 @@
 // Simulates 50 concurrent users to test system stability
 // ═══════════════════════════════════════════════════════
 
-const BASE = "http://127.0.0.1:3000";
+const BASE = "http://127.0.0.1:4000";
 const CONCURRENT_USERS = 50;
 
 async function simulateUser(userId) {

@@ -1,6 +1,7 @@
 
 const express = require("express");
 const path = require("path");
+const database = require('./database');
 
 const app = express();
 app.use(express.json());
@@ -99,6 +100,18 @@ app.post("/api/transactions/initiate", (req, res) => {
     createdAt: now.toISOString()
   };
 
+  // Add this after you create the transaction object and calculate risk:
+database.saveTransaction(transaction, (err, id) => {
+  if (!err) {
+    database.saveAuditLog(
+      'Transaction analyzed',
+      `${transaction.reference} · ₹${transaction.amount} · Score ${transaction.riskScore}`,
+      transaction.riskLevel === 'CRITICAL' ? 'danger' : 'info'
+    );
+  }
+});
+
+
   const risk = calculateFinalRisk(transaction);
   
   Object.assign(transaction, risk);
@@ -126,7 +139,7 @@ app.post("/api/transactions/:id/verify", (req, res) => {
   res.json(transaction);
 });
 
-app.listen(3000, () => console.log("FraudShield AI running at http://localhost:3000"));
+
 // Health check endpoint for monitoring
 app.get("/health", (req, res) => {
   res.json({
@@ -137,6 +150,38 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("FraudShield AI running at http://localhost:3000");
+// Statistics endpoint
+app.get("/api/stats", (req, res) => {
+  database.getStats((err, stats) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get stats" });
+    }
+    res.json(stats);
+  });
+});
+
+// Get all transactions from database
+app.get("/api/transactions/db", (req, res) => {
+  database.getAllTransactions((err, transactions) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get transactions" });
+    }
+    res.json(transactions);
+  });
+});
+
+// Get audit logs from database
+app.get("/api/audit/db", (req, res) => {
+  database.getAuditLogs((err, logs) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get audit logs" });
+    }
+    res.json(logs);
+  });
+});
+
+// Start Server
+const PORT = 4000;
+app.listen(PORT, () => {
+  console.log(`✅ FraudShield AI running at http://localhost:${PORT}`);
 });
