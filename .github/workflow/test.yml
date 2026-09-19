@@ -1,0 +1,36 @@
+
+name: FraudShield CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Start Server in Background
+      run: node server.js &
+      
+    - name: Wait for Server to be Ready
+      run: sleep 3
+
+    - name: Run Validation Suite
+      run: node test.js
+      
+    - name: Run Load Test
+      run: node load-test.js

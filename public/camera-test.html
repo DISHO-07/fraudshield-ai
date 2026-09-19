@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html>
+<body style="background:#111;color:#fff;font-family:sans-serif;text-align:center;padding:40px;">
+  <h2>Camera Test</h2>
+  <video id="v" autoplay muted playsinline style="width:400px;border:2px solid #3b82f6;border-radius:12px;"></video>
+  <p id="msg" style="margin-top:15px;">Click the button below and allow camera permission.</p>
+  <button onclick="test()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Start Camera</button>
+  <script>
+    async function test() {
+      const msg = document.getElementById("msg");
+      if (!window.isSecureContext) {
+        msg.innerText = "❌ NOT A SECURE CONTEXT. You must open http://localhost:3000 (not an IP address like 192.168.x.x).";
+        return;
+      }
+      if (!navigator.mediaDevices) {
+        msg.innerText = "❌ Browser does not expose camera API (mediaDevices undefined).";
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        document.getElementById("v").srcObject = stream;
+        msg.innerText = "✅ Camera is working perfectly!";
+      } catch (e) {
+        msg.innerText = "❌ ERROR: " + e.name + " — " + e.message;
+      }
+    }
+  </script>
+</body>
+</html>

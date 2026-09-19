@@ -1,0 +1,22 @@
+
+{
+  "name": "fraudshield-ai",
+  "version": "2.4.1",
+  "description": "FraudShield AI: Real-time pre-transaction fraud detection with explainable AI and biometric eKYC.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "fraud-detection",
+    "machine-learning",
+    "fintech",
+    "cybersecurity"
+  ],
+  "author": "Disho / The One",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
